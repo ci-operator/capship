@@ -1,0 +1,13 @@
+#!/bin/bash
+tag=${1:-test}
+
+podfile=Podfile
+image=runner
+
+if [ $tag = base ]; then
+  podfile=$podfile.$tag
+fi
+
+tar czf runner.tgz runner
+echo Building $image:$tag from $podfile
+podman build -t $image:$tag -f $podfile

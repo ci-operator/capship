@@ -1,0 +1,13 @@
+---
+- hosts: runner
+  gather_facts: no
+  vars:
+    runner_url: "{{ lookup('env','RUNNER_HOST') }}"
+  tasks:
+    - name: Create & run restore Jobs with Operations for each component
+      include_role:
+        name: jobrun
+      vars:
+        job_tag: base_restore
+        runner_action: restore
+        components: ['each']

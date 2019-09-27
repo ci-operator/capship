@@ -1,0 +1,75 @@
+---
+# Create new Operations under a Unit matching inventory_hostname in a RedRunner Job
+# Trigger playbook operations (<runner_action>.yml) for each Unit, and poll RedRunner for results.
+# Fail unless each operation succeeds within a set amount of time.
+#
+# requires:
+#   job_id (string)
+#   runner_action (string)
+# uses:
+#   runner_url (string)
+
+- name: Collect current job by ID
+  run_once: true
+  connection: local
+  uri:
+    url: "{{ runner_url }}/v1/jobs/{{ job_id }}"
+    method: GET
+  register: runner_job
+
+- name: Set Unit
+  set_fact:
+    unit: "{{ ([ runner_job.json|json_query(query_self) , runner_job.json|json_query(query_each) ]|flatten)[0] }}"
+  vars:
+    query_each: "units[?name=='each']"
+    query_self: "units[?name=='{{ inventory_hostname }}']"
+  with_items: # for display only
+    - "{{ ([ runner_job.json|json_query(query_self) , runner_job.json|json_query(query_each) ]|flatten)[0]['unit_id'] }}"
+
+- name: Unit action triggered
+  connection: local
+  uri:
+    url: "{{ runner_url }}/v1/units/{{ unit.unit_id }}?action={{ runner_action }}-{{ unit.name }}.yml"
+    method: post
+    status_code:
+      - 201
+    timeout: 60
+  changed_when: true
+  until: unit_trigger.status != -1 # Timeout?
+  register: unit_trigger
+
+- name: Operation collection
+  connection: local
+  uri:
+    url: "{{ runner_url }}/v1/ops/{{ (unit_trigger.json|from_yaml)['op_id'] }}"
+    method: get
+    status_code:
+      - 200
+  changed_when: false
+  until: running_unit.json.status|default('') in [ 'successful', 'failed' ]
+  failed_when: running_unit.json.status|default('') == 'failed'
+  delay: 15
+  retries: 30
+  ignore_errors: true
+  async: 3600
+  poll: 7
+  register: running_unit
+  vars:
+    ansible_async_dir: /tmp/.ansible_async_{{ (unit_trigger.json|from_yaml)['op_id'] }}
+
+## TODO: Enable async check like below, once operation collection retries become built into (custom) module.
+# - name: Check async Operation status (if poll is 0)
+#   async_status:
+#     jid: "{{ running_unit.ansible_job_id }}"
+#   register: job_result
+#   until: running_unit.json.status|default('') in [ 'successful', 'failed' ]
+#   delay: 10
+#   retries: 30
+
+# This task signals operation success/failure
+# NOTE: Ongoing operations surpassing above delay*retries timeout will continue
+#       in the background but will FAIL here (even if the jobs eventually succeed)
+- name: Operation Output if unsuccessful
+  when: (running_unit.json|from_yaml)['status'] is not match('successful')
+  failed_when: true
+  debug: msg="{{ (running_unit.json|from_yaml)['stdout'] }}"

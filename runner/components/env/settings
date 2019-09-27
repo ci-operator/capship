@@ -1,0 +1,7 @@
+---
+idle_timeout: 600
+job_timeout: 3600
+pexpect_timeout: 10
+suppress_ansible_output: False
+fact_cache: 'fact_cache'
+fact_cache_type: 'jsonfile'

@@ -1,0 +1,73 @@
+---
+# Create a new Job in RedRunner, populating its Units with "components" 
+# By convention, these componenents represent K8S application microservices
+#
+# requires:
+#   job_tag (string)
+#   components (list of strings)
+# uses:
+#   runner_url (string)
+
+- debug: var=job_tag
+
+- name: Collect latest job with tag
+  run_once: true
+  connection: local
+  uri:
+    url: "{{ runner_url }}/v1/jobs?latest=true&tag={{ job_tag }}"
+    method: GET
+  register: latest_job
+
+- name: Create new Job
+  run_once: true
+  connection: local
+  uri:
+    url: "{{ runner_url }}/v1/jobs"
+    method: post
+    headers:
+      Content-Type: application/json
+    body_format: json
+    status_code:
+      - 201
+    body:
+      tag: "{{ job_tag }}"
+      units: "{{ components }}"
+  when: latest_job.json is not defined
+  changed_when: true
+  register: new_job
+
+# TODO: (Optionally?) Perform idempotent update of pre-existing Job Units
+- name: Configure Units in Job
+  run_once: true
+  connection: local
+  uri:
+    url: "{{ runner_url }}/v1/units/{{ unit.unit_id }}"
+    method: PUT
+    headers:
+      Content-Type: application/json
+    body_format: json
+    body:
+      name: "{{ unit.name }}"
+      data_dir: "/runner/components"
+    status_code:
+      - 200
+      - 201
+      - 204
+  changed_when: unit_modified.status in [201, 200]
+  register: unit_modified
+  loop_control:
+    loop_var: unit
+    label: "{{ unit.name }}"
+  loop: "{{ (new_job.json|default(latest_job.json)).units }}"
+
+- name: Job collected by ID
+  run_once: true
+  connection: local
+  uri:
+    url: "{{ runner_url }}/v1/jobs/{{ (new_job.json|default(latest_job.json))['job_id'] }}"
+    method: GET
+  register: runner_job
+
+- name: Current Job set
+  set_fact:
+    current_job: "{{ runner_job.json|default(latest_job.json) }}"

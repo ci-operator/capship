@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+
+from gevent import monkey  # noqa 
+monkey.patch_all()  # noqa 
+
+import connexion
+import logging
+import os
+
+verbosity_lvl = verbosity = os.environ.get('RUNNER_VERBOSITY') or 'INFO'
+if verbosity == 'INFO':
+    verbosity_lvl = logging.INFO
+elif verbosity == 'DEBUG':
+    verbosity_lvl = logging.DEBUG
+
+# runner_port = int(os.environ.get('RUNNER_PORT')) or 9011 
+runner_port = 9011
+
+logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                    datefmt='%Y-%m-%d:%H:%M:%S',
+                    level=verbosity_lvl)
+
+if __name__ == '__main__':
+    app = connexion.FlaskApp(__name__)
+    app.add_api('runner-api.yaml',
+                arguments={'title': 'RedRunner'},
+                resolver=connexion.RestyResolver('api'))
+    app.run(port=runner_port, server='gevent')

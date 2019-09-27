@@ -1,0 +1,9 @@
+#!/bin/sh
+tag=${1-base}
+
+image=runner
+repo=docker-registry.engineering.redhat.com/ccit/runner
+
+echo Tagging and pushing $repo:$tag
+podman tag $image:$tag $repo:$tag
+podman push $repo:$tag

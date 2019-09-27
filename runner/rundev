@@ -1,0 +1,1 @@
+podman run -p 9011:9011 -v ${PWD}:/recovery:Z -e OC_TOKEN=$(oc whoami -t) runner:test /runner/runner

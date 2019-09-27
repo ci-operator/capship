@@ -1,0 +1,2 @@
+---
+oc_ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt

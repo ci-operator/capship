@@ -1,0 +1,36 @@
+#### Ansible Runner ####
+FROM fedora:30
+LABEL maintainer=josiah@redhat.com
+
+ARG TINI_VERSION=18
+ARG ORIGIN_COMMIT=0cbc58b
+
+ADD RH-IT-Root-CA.crt /etc/pki/ca-trust/source/anchors/RH-IT-Root-CA.crt
+RUN update-ca-trust extract
+
+ADD https://github.com/krallin/tini/releases/download/v0.${TINI_VERSION}.0/tini /bin/tini
+RUN chmod +x /bin/tini 
+
+RUN dnf -y groupinstall 'Development Tools' && \
+    dnf -y install python36 python3-pip python3-psutil python3-crypto python3-docutils python3-devel bubblewrap bzip2 openssh openssh-clients git && \
+    dnf clean all -y
+
+# Ansible installed from source until upstream bugfix for K8S API cert validation is released for 'oc' module.
+RUN pip3 install --no-cache-dir --upgrade setuptools && \
+    mkdir /build && cd /build && git clone --depth 1 https://github.com/ansible/ansible.git && cd ansible && python3 setup.py build && python3 setup.py install && \
+    pip3 install --no-cache-dir wheel pexpect jmespath psutil python-daemon ansible-runner peewee gevent connexion[swagger-ui] openshift openstacksdk python-openstackclient
+
+ADD https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz /tmp/
+RUN tar xzvf /tmp/openshift-origin-client-tools-v3.11.0-${ORIGIN_COMMIT}-linux-64bit.tar.gz -C /usr/local/bin/ && \
+    mv /usr/local/bin/openshift-origin-client-tools-v3.11.0-${ORIGIN_COMMIT}-linux-64bit/oc /usr/local/bin/ && \
+    yum clean all -y
+
+RUN mkdir /etc/ansible && \
+    ln -s /runner/components/roles /etc/ansible/roles && \
+    useradd -mNg 0 -d /ansible -c "Ansible User" ansible && \
+    chmod g=u /etc/passwd /etc/group && chmod -R g=u /ansible
+USER 1000
+WORKDIR /ansible
+
+ADD entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]

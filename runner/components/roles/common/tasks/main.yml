@@ -1,0 +1,6 @@
+--- ### Common Role main
+- name: Common vars set
+  set_fact:
+    oc_project: "{{ lookup('env', 'NAMESPACE') }}"
+    oc_token: "{{ lookup('file', '/var/run/secrets/kubernetes.io/serviceaccount/token') }}"
+    oc_ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
