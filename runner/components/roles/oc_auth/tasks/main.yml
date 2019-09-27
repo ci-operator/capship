@@ -1,0 +1,6 @@
+---
+- debug: var=oc_project
+
+- command: oc login openshift.default.svc.cluster.local --token={{ oc_token }} -n {{ oc_project }} --certificate-authority={{ oc_ca_cert }}
+  ignore_errors: true
+  register: recovery_login

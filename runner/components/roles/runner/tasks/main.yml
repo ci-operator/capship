@@ -1,0 +1,18 @@
+---
+- name: Get Recovery pod
+  run_once: true
+  command: oc get pods --selector=app=recovery -o name --certificate-authority={{ oc_ca_cert }}
+  register: recovery_pod_
+
+- name: Recovery storage usage checked 
+  run_once: true
+  shell: oc exec {{ recovery_pod }} -- df -B 1M --output=used,avail,pcent /recovery/data | tail -n +2 |sed 's/ \( *\)/ /g' |tr ' ' '\n' |tail -n +2
+  register: recovery_store
+
+- name: Recovery Storage Usage
+  debug: msg="{{ dict( storage_fields |zip(recovery_store.stdout_lines) ) }}"
+  vars:
+    storage_fields:
+      - 'used'
+      - 'free'
+      - 'used_percent'

@@ -1,0 +1,537 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: RedRunner API
+  description: API to store and retrieve jobs
+  license:
+    name: GPL
+servers:
+  - url: http://localhost:9011/v1
+paths:
+  /jobs:
+    get:
+      summary: List all jobs
+      tags:
+        - jobs
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: tag
+          in: query
+          description: Job Tag
+          required: false
+          schema:
+            type: string
+        - name: latest
+          in: query
+          description: Only return latest
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: A paged array of jobs
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jobs"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a job
+      tags:
+        - jobs
+      parameters:
+        - name: tag
+          in: query
+          description: Job Tag
+          required: false
+          schema:
+            type: string
+            default: default
+        - name: units
+          in: query
+          description: List of names of new units to add to job
+          required: false
+          schema:
+            type: list
+      requestBody:
+        description: Job to add to the system
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Job"
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    # put:
+    #   summary: Update a job
+    #   tags:
+    #     - jobs
+    #   requestBody:
+    #     description: Job to add to the system
+    #     content:
+    #       application/json:
+    #         schema:
+    #           allOf:
+    #           - $ref: "#/components/schemas/Job"
+    #           - type: object
+    #             required:
+    #             - job_id
+    #             properties:
+    #               id:
+    #                 type: integer
+    #                 format: int64
+    #           example:
+    #             job_id: 1
+    #             name: chester
+    #             tag: sleepy
+    #   responses:
+    #     '201':
+    #       description: Null response
+    #     default:
+    #       description: unexpected error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: "#/components/schemas/Error"
+
+
+  /jobs/{job_id}:
+    get:
+      summary: Info for a specific job
+      tags:
+        - jobs
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          description: The id of the job to retrieve
+          schema:
+            type: integer
+            format: int32
+        - name: tag
+          in: query
+          description: Job Tag
+          required: false
+          schema:
+            type: string
+            default: default
+        - name: units
+          in: query
+          description: List of new units to add to job
+          required: false
+          schema:
+            type: list
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jobs"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    put:
+      summary: Update a job
+      tags:
+        - jobs
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          description: The id of the job to retrieve
+          schema:
+            type: integer
+            format: int32
+        - name: tag
+          in: query
+          description: Job Tag
+          required: false
+          schema:
+            type: string
+            default: default
+        - name: units
+          in: query
+          description: List of new units to add to job
+          required: false
+          schema:
+            type: list
+      requestBody:
+        description: Job to add to the system
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: "#/components/schemas/Job"
+              - type: object
+                # required:
+                # - job_id
+                properties:
+                  tag:
+                    type: string
+                  units:
+                    type: array
+              example:
+                job_id: 1
+                tag: nightly
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      summary: Delete a specific job job
+      tags:
+        - jobs
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          description: The id of the job to retrieve
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jobs"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /units:
+    get:
+      summary: List all units
+      tags:
+        - units
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: A paged array of units
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Units"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /units/{unit_id}:
+    get:
+      summary: Info for a specific unit
+      tags:
+        - units
+      parameters:
+        - name: unit_id
+          in: path
+          required: true
+          description: The id of the unit to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Units"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    put:
+      summary: Update a unit
+      tags:
+        - units
+      parameters:
+        - name: unit_id
+          in: path
+          required: true
+          description: The id of the unit task to retrieve
+          schema:
+            type: integer
+            format: int32
+        - name: name
+          in: query
+          description: Unit name
+          required: false
+          schema:
+            type: string
+            default: default
+        - name: data_dir
+          in: query
+          description: Unit task data_dir
+          required: false
+          schema:
+            type: string
+            default: /runner/units
+        - name: stdout
+          in: query
+          description: Standard output from unit task
+          required: false
+          schema:
+            type: string
+        - name: task
+          in: query
+          description: Logs from unit task
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status of unit task
+          required: false
+          schema:
+            type: string
+      requestBody:
+        description: Unit to update
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: "#/components/schemas/Unit"
+              - type: object
+                # required:
+                # - unit_id
+                properties:
+                  unit_id:
+                    type: integer
+                  status:
+                    type: string
+                  data_dir:
+                    type: string
+                  name:
+                    type: string
+                  task:
+                    type: string
+                  stdout:
+                    type: string
+              example:
+                name: mongo
+                data_dir: mongodump.yml
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    post:
+      summary: Create a unit action
+      tags:
+        - units
+      parameters:
+        - name: unit_id
+          in: path
+          required: true
+          description: The id of the unit to trigger
+          schema:
+            type: integer
+            format: int32
+        - name: action
+          in: query
+          description: Unit action
+          required: true
+          schema:
+            type: string
+            default: view
+      requestBody:
+        description: Unit to trigger
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Unit"
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+
+  /ops/{op_id}:
+    get:
+      summary: Info for a specific op
+      tags:
+        - ops
+      parameters:
+        - name: op_id
+          in: path
+          required: true
+          description: The id of the op to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ops"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+
+components:
+  schemas:
+    Job:
+      # required:
+      #   - tag
+      properties:
+        job_id:
+          readOnly: true
+          type: integer
+          format: int64
+        tag:
+          type: string
+        created:
+          type: string
+      example:
+        job_id: 3
+        tag: nightly
+        created: 2019-06-19 13:33:48.462050
+    Jobs:
+      type: array
+      items:
+        $ref: "#/components/schemas/Job"
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    Unit:
+      # required:
+      #   - tag
+      properties:
+        unit_id:
+          readOnly: true
+          type: integer
+          format: int64
+        name:
+          type: string
+        data_dir:
+          type: string
+        status:
+          # readOnly: true
+          type: string
+        task:
+          # readOnly: true
+          type: string
+        stdout:
+          # readOnly: true
+          type: string
+      example:
+        unit_id: 78
+        data_dir: recovery/mongodb
+        task: null
+        name: mongodb
+        status: ready
+        stdout: ''
+    Units:
+      type: array
+      items:
+        $ref: "#/components/schemas/Unit"
+    Op:
+      required:
+        - op_id
+      properties:
+        op_id:
+          type: integer
+          format: int64
+        stdout:
+          type: string
+        status:
+          type: string
+      example:
+        op_id: 3
+        stdout: "Command not found"
+        status: "failed"
+    Ops:
+      type: array
+      items:
+        $ref: "#/components/schemas/Op"
+
+# TODO: 
+# security:
+#   # enable OAuth protection for all REST endpoints
+#   # (only active if the TOKENINFO_URL environment variable is set)
+#   - oauth2: [uid]
+
+# securityDefinitions:
+#   oauth2:
+#     type: oauth2
+#     flow: implicit
+#     authorizationUrl: https://example.com/oauth2/dialog
+#     scopes:
+#       uid: Unique identifier of the user accessing the service.

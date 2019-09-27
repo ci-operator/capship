@@ -1,0 +1,32 @@
+#!/bin/bash
+
+RUNNER_URL=${RUNNER_URL:-http://localhost:9011/v1}
+
+echo Targetting $RUNNER_URL
+
+#Create new runner job with one unit
+#Create an operation in the unit, running a playbook
+#TODO: Make idempotent
+new_runner_job() {
+  local JOB_TAG=$1
+  local UNIT=$2
+  local PLAYBOOK=$3
+
+  echo Creating $JOB_TAG job with $UNIT unit to run $PLAYBOOK playbook.
+
+  UNIT_ID="$(curl -skLX POST ${RUNNER_URL}/jobs -H 'Content-Type: application/json' -d "{ \"units\": [ \"$UNIT\" ] }" |jq '.units[0].unit_id')"
+  echo unit_id: $UNIT_ID
+  curl -skLX PUT $RUNNER_URL/units/$UNIT_ID -H 'Content-Type: application/json' -d "{ \"data_dir\": \"/runner/components\", \"name\": \"$UNIT\" }" >/dev/null
+  OP="$(curl -skLX POST $RUNNER_URL/units/$UNIT_ID?action=$PLAYBOOK)"
+  echo Triggered op: $OP
+}
+
+main () {
+  JOB_TAG=${1:-default}
+  UNIT=${2:-test}
+  PLAYBOOK=${3:-test.yml}
+
+  new_runner_job $JOB_TAG $UNIT $PLAYBOOK
+}
+
+main $@
