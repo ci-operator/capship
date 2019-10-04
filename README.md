@@ -1,4 +1,4 @@
-== RedRunner
+**RedRunner**
 
 RedRunner is a microservice utility for executing Ansible playbooks via API as part of a distributed Kubernetes deployment.
 
@@ -23,4 +23,4 @@ It's noteworthy to recognize that, following this pattern, the Operations's play
 
 Syncronization between components occurs at a Play level, as opposed to at a Task level, and a playbook failure for one component will not affect the run of another component's playbook.  All tasks in each 'action' playbook are performed, for that component, to completion or failure.
 
-The playbooks and roles provided in `runner/utils' and 'runner/components/project' respectively serve as an example how to use the RedRunner to initialize, trigger, and track the status of playbook operations in a tagged RedRunner Job.
+The playbooks and roles provided in `runner/utils` and `runner/components/project` respectively serve as an example how to use the RedRunner to initialize, trigger, and track the status of playbook operations in a tagged RedRunner Job.
