@@ -21,12 +21,12 @@
 
 - name: Set Unit
   set_fact:
-    unit: "{{ ([ runner_job.json|json_query(query_self) , runner_job.json|json_query(query_each) ]|flatten)[0] }}"
+    unit: "{{ ([ runner_job.results[0]['json']|json_query(query_self) , runner_job.results[0]['json']|json_query(query_each) ]|flatten)[0] }}"
   vars:
     query_each: "units[?name=='each']"
     query_self: "units[?name=='{{ inventory_hostname }}']"
   with_items: # for display only
-    - "{{ ([ runner_job.json|json_query(query_self) , runner_job.json|json_query(query_each) ]|flatten)[0]['unit_id'] }}"
+    - "{{ ([ runner_job.results[0]['json']|json_query(query_self) , runner_job.results[0]['json']|json_query(query_each) ]|flatten)[0]['unit_id'] }}"
 
 - name: Unit action trigger
   connection: local

@@ -17,7 +17,7 @@
   register: latest_job
   with_items: # <- Display Only
     - "{{ job_tag }}"
-
+    
 - name: Create new Job
   run_once: true
   connection: local
@@ -32,7 +32,7 @@
     body:
       tag: "{{ job_tag }}"
       units: "{{ components }}"
-  when: latest_job.json is not defined
+  when: latest_job.result[0]['json'] is not defined
   changed_when: true
   register: new_job
 
@@ -58,7 +58,7 @@
   loop_control:
     loop_var: unit
     label: "{{ unit.name }}"
-  loop: "{{ (new_job.json|default(latest_job.json)).units }}"
+  loop: "{{ (new_job.json|default(latest_job.result[0]['json'])).units }}"
 
 - name: Job collected
   run_once: true
@@ -68,8 +68,10 @@
     method: GET
   register: runner_job
   with_items: # <- Display Only
-    - "{{ (new_job.json|default(latest_job.json))['job_id'] }}"
+    - "{{ (new_job.json|default(latest_job.result[0]['json']))['job_id'] }}"
+
+- debug: var=runner_job
 
 - name: Current Job set
   set_fact:
-    current_job: "{{ runner_job.json|default(latest_job.json) }}"
+    current_job: "{{ runner_job.results[0]['json'] }}"

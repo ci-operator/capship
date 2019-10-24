@@ -8,7 +8,7 @@ message: RedRunner is deployed
 metadata:
   annotations:
     description: |-
-      RedRunner - A minimalist REST API for distributable, in-cluster microservice O&M via ansible playbooks
+      RedRunner - A minimalist API for distributable, in-cluster microservice O&M via ansible playbooks
     iconClass: icon-openshift
     openshift.io/display-name: RedRunner
     openshift.io/documentation-url: https://gitlab.engineering.redhat.com/ccit/redrunner/raw/master/README.md
