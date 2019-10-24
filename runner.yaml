@@ -47,6 +47,8 @@ objects:
           env:
           - name: RP_HOST
             value: ${HOST_NAME}.cloud.paas.psi.redhat.com
+          - name: HOST_NAME
+            value: ${HOST_NAME}
           - name: RUNNER_VERBOSITY
             value: INFO
           - name: TINI_SUBREAPER
