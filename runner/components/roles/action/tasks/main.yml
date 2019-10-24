@@ -1,6 +1,6 @@
 ---
 # Create new Operations under a Unit matching inventory_hostname in a RedRunner Job
-# Trigger playbook operations (<runner_action>.yml) for each Unit, and poll RedRunner for results.
+# Trigger playbook operations for each Unit, then poll RedRunner for results.
 # Fail unless each operation succeeds within a set amount of time.
 #
 # requires:
@@ -9,13 +9,15 @@
 # uses:
 #   runner_url (string)
 
-- name: Collect current job by ID
+- name: Job collection
   run_once: true
   connection: local
   uri:
-    url: "{{ runner_url }}/v1/jobs/{{ job_id }}"
+    url: "{{ runner_url }}/v1/jobs/{{ item }}"
     method: GET
   register: runner_job
+  with_items: # <- Display Only
+    - "{{ job_id }}"
 
 - name: Set Unit
   set_fact:
@@ -26,7 +28,7 @@
   with_items: # for display only
     - "{{ ([ runner_job.json|json_query(query_self) , runner_job.json|json_query(query_each) ]|flatten)[0]['unit_id'] }}"
 
-- name: Unit action triggered
+- name: Unit action trigger
   connection: local
   uri:
     url: "{{ runner_url }}/v1/units/{{ unit.unit_id }}?action={{ runner_action }}-{{ unit.name }}.yml"
@@ -67,7 +69,7 @@
 #   retries: 30
 
 # This task signals operation success/failure
-# NOTE: Ongoing operations surpassing above delay*retries timeout will continue
+# NOTE: Ongoing operations exceeding above delay*retries timeout will continue
 #       in the background but will FAIL here (even if the jobs eventually succeed)
 - name: Operation Output if unsuccessful
   when: (running_unit.json|from_yaml)['status'] is not match('successful')

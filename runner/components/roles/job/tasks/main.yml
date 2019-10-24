@@ -8,15 +8,15 @@
 # uses:
 #   runner_url (string)
 
-- debug: var=job_tag
-
 - name: Collect latest job with tag
   run_once: true
   connection: local
   uri:
-    url: "{{ runner_url }}/v1/jobs?latest=true&tag={{ job_tag }}"
+    url: "{{ runner_url }}/v1/jobs?latest=true&tag={{ item }}"
     method: GET
   register: latest_job
+  with_items: # <- Display Only
+    - "{{ job_tag }}"
 
 - name: Create new Job
   run_once: true
@@ -60,13 +60,15 @@
     label: "{{ unit.name }}"
   loop: "{{ (new_job.json|default(latest_job.json)).units }}"
 
-- name: Job collected by ID
+- name: Job collected
   run_once: true
   connection: local
   uri:
-    url: "{{ runner_url }}/v1/jobs/{{ (new_job.json|default(latest_job.json))['job_id'] }}"
+    url: "{{ runner_url }}/v1/jobs/{{ item }}"
     method: GET
   register: runner_job
+  with_items: # <- Display Only
+    - "{{ (new_job.json|default(latest_job.json))['job_id'] }}"
 
 - name: Current Job set
   set_fact:

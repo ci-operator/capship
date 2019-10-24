@@ -1,0 +1,17 @@
+---
+# Schedule & trigger Operationss in a tagged Job
+#
+# Requires:
+#  job_tag: string
+#  components: component names (list of strings)
+#  runner_action: playbook name (string)
+
+- name: Job definition
+  include_role:
+    name: job
+
+- name: Action definition
+  include_role: 
+    name: action
+  vars:
+    job_id: "{{ current_job.job_id }}"
