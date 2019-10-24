@@ -14,7 +14,7 @@
   connection: local
   uri:
     url: "{{ runner_url }}/v1/jobs/{{ item }}"
-    method: GET
+    method: get
   register: runner_job
   with_items: # <- Display Only
     - "{{ job_id }}"

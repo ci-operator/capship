@@ -13,7 +13,7 @@
   connection: local
   uri:
     url: "{{ runner_url }}/v1/jobs?latest=true&tag={{ item }}"
-    method: GET
+    method: get
   register: latest_job
   with_items: # <- Display Only
     - "{{ job_tag }}"
@@ -42,7 +42,7 @@
   connection: local
   uri:
     url: "{{ runner_url }}/v1/units/{{ unit.unit_id }}"
-    method: PUT
+    method: put
     headers:
       Content-Type: application/json
     body_format: json
@@ -65,7 +65,7 @@
   connection: local
   uri:
     url: "{{ runner_url }}/v1/jobs/{{ item }}"
-    method: GET
+    method: get
   register: runner_job
   with_items: # <- Display Only
     - "{{ (new_job.json|default(latest_job.result[0]['json']))['job_id'] }}"
