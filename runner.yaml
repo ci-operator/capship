@@ -51,6 +51,8 @@ objects:
             value: ${HOST_NAME}
           - name: RUNNER_VERBOSITY
             value: INFO
+          - name: RUNNER_DB
+            value: /runner/data/runner.db
           - name: TINI_SUBREAPER
             value: 'true'
           - name: NAMESPACE
