@@ -70,8 +70,6 @@
   with_items: # <- Display Only
     - "{{ (new_job.json|default(latest_job.result[0]['json']))['job_id'] }}"
 
-- debug: var=runner_job
-
 - name: Current Job set
   set_fact:
     current_job: "{{ runner_job.results[0]['json'] }}"
