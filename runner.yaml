@@ -80,7 +80,7 @@ objects:
           - mountPath: /.kube
             name: kubeconfig
           - mountPath: /runner/data
-            name: recovery
+            name: runner-data
           - mountPath: /runner/components/project
             name: components
           - mountPath: /runner/components/inventory/hosts
@@ -94,9 +94,9 @@ objects:
         securityContext: {}
         terminationGracePeriodSeconds: 30
         volumes:
-        - name: recovery
+        - name: runner-data
           persistentVolumeClaim:
-            claimName: recovery
+            claimName: "${RUNNER_PVC_NAME}"
         - name: components
           configMap:
             name: recovery-components
@@ -191,4 +191,8 @@ parameters:
   displayName: Runner Image Tag
   name: RUNNER_TAG
   required: true
-
+- description: Runner PVC Name
+  displayName: Runner PersistentVolumeClaim Name
+  name: RUNNER_PVC_NAME
+  value: "runner-data"
+  required: true
