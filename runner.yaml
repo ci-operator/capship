@@ -96,7 +96,7 @@ objects:
         volumes:
         - name: runner-data
           persistentVolumeClaim:
-            claimName: "${RUNNER_PVC_NAME}"
+            claimName: "${RUNNER_PVC}"
         - name: components
           configMap:
             name: recovery-components
@@ -193,6 +193,6 @@ parameters:
   required: true
 - description: Runner PVC Name
   displayName: Runner PersistentVolumeClaim Name
-  name: RUNNER_PVC_NAME
+  name: RUNNER_PVC
   value: "runner-data"
   required: true
