@@ -1,0 +1,16 @@
+---
+- hosts: runner
+  gather_facts: no
+  vars:
+    runner_url: "{{ lookup('env','RUNNER_HOST') }}"
+    runner_job_tag: "{{ lookup('env','RUNNER_JOB_TAG') }}"
+    runner_action: "{{ lookup('env','RUNNER_ACTION') }}"
+
+  tasks:
+    - name: Create & run Jobs with Operations for each component
+      include_role:
+        name: jobrun
+      vars:
+        job_tag: base_{{ runner_job_tag }}
+        runner_action: "{{ runner_action }}"
+        components: ['each']
