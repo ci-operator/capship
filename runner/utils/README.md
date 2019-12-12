@@ -1,2 +1,0 @@
-Backup:
-curl -skLX post https://reportportal-dev-runner.cloud.paas.psi.redhat.com/v1/actions/?job_id=$(curl -skLX post https://reportportal-dev-runner.cloud.paas.psi.redhat.com/v1/jobs --header 'Content-Type: application/json' -H 'Accept: */*' --header  -d "{ [ 'test' ] }"|jq -r '.job_id')
