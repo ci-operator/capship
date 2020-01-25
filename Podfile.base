@@ -1,4 +1,4 @@
-#### Ansible Runner ####
+#### RedRunner ####
 FROM fedora:30
 LABEL maintainer=josiah@redhat.com
 
@@ -6,13 +6,13 @@ ARG TINI_VERSION=18
 ARG ORIGIN_COMMIT=0cbc58b
 
 ADD RH-IT-Root-CA.crt /etc/pki/ca-trust/source/anchors/RH-IT-Root-CA.crt
-RUN update-ca-trust extract
+RUN /bin/update-ca-trust extract
 
 ADD https://github.com/krallin/tini/releases/download/v0.${TINI_VERSION}.0/tini /bin/tini
 RUN chmod +x /bin/tini 
 
 RUN dnf -y groupinstall 'Development Tools' && \
-    dnf -y install python36 python3-pip python3-psutil python3-crypto python3-docutils python3-devel bubblewrap bzip2 openssh openssh-clients git && \
+    dnf -y install python36 python3-pip python3-psutil python3-crypto python3-docutils python3-devel bubblewrap bzip2 openssh openssh-clients git restic && \
     dnf clean all -y
 
 # Ansible installed from source until upstream bugfix for K8S API cert validation is released for 'oc' module.
