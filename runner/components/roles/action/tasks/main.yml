@@ -8,6 +8,7 @@
 #   runner_action (string)
 # uses:
 #   runner_url (string)
+#   runner_timeout (integer: minutes)
 
 - name: Job collection
   run_once: true
@@ -48,13 +49,13 @@
     status_code:
       - 200
   changed_when: false
-  until: running_unit.json.status|default('') in [ 'successful', 'failed' ]
+  until: running_unit.json.status|default('') in [ 'successful', 'failed', 'timeout' ]
   failed_when: running_unit.json.status|default('') == 'failed'
   delay: 15
-  retries: 30
+  retries: "{{ (runner_timeout|default(10)|int) * 4 }}"
   ignore_errors: true
   async: 3600
-  poll: 7
+  poll: 15
   register: running_unit
   vars:
     ansible_async_dir: /tmp/.ansible_async_{{ (unit_trigger.json|from_yaml)['op_id'] }}
