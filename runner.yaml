@@ -185,7 +185,7 @@ parameters:
 - description: Runner Image Stream
   displayName: Runner Image Registry Repository
   name: RUNNER_IMAGE
-  value: "docker-registry.engineering.redhat.com/ccit/runner"
+  value: "docker-registry.upshift.redhat.com/ccit/runner"
   required: true
 - description: Runner Image Tag
   displayName: Runner Image Tag
