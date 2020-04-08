@@ -2,8 +2,8 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 labels:
-  app: reportportal
-  template: reportportal-template
+  app: runner
+  template: redrunner
 message: RedRunner is deployed
 metadata:
   annotations:
@@ -58,11 +58,6 @@ objects:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.namespace
-          - name: MONGODB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: mongodb-password
-                name: mongodb-auth
           ports:
           - containerPort: 9011
             protocol: TCP
@@ -99,7 +94,7 @@ objects:
             claimName: "${RUNNER_PVC}"
         - name: components
           configMap:
-            name: recovery-components
+            name: "${RUNNER_PLAYBOOKS}"
         - name: inventory
           configMap:
             name: runner-hosts
@@ -195,4 +190,9 @@ parameters:
   displayName: Runner PersistentVolumeClaim Name
   name: RUNNER_PVC
   value: "runner-data"
+  required: true
+- description: Runner Components ConfigMap Name
+  displayName: Mounted configmap containing ansible playbooks
+  name: RUNNER_PLAYBOOKS
+  value: "recovery-components"
   required: true
