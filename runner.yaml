@@ -66,6 +66,9 @@ objects:
               cpu: 1000m
               memory: 1Gi
           volumeMounts:
+          - mountPath: /ansible/requirements.yml
+            subPath: requirements.yml
+            name: galaxy-requirements
           - mountPath: /runner/.ansible
             name: ansible-tmp
           - mountPath: /.ansible
@@ -106,6 +109,12 @@ objects:
         - name: kubeconfig
           emptyDir:
             medium: Memory
+        - name: galaxy-requirements
+          configMap:
+            name: "${GALAXY_REQUIREMENTS_CM}"
+            items:
+            - key: requirements.yml
+              path: requirements.yml
         - name: runner-kubeconfig
           emptyDir:
             medium: Memory
@@ -195,4 +204,9 @@ parameters:
   displayName: Mounted configmap containing ansible playbooks
   name: RUNNER_COMPONENTS_CM
   value: "recovery-components"
+  required: true
+- description: Runner Galaxy requirements ConfigMap Name
+  displayName: Mounted configmap containing Ansible Galaxy requirements.yml
+  name: GALAXY_REQUIREMENTS_CM
+  value: "runner-roles"
   required: true
