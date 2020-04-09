@@ -72,14 +72,12 @@ objects:
           - mountPath: /runner/.ansible
             name: ansible-tmp
           - mountPath: /.ansible
-            name: ansible-tmp
+            name: runner-data
           - mountPath: /runner/.kube
             name: runner-kubeconfig
           - mountPath: /.kube
             name: kubeconfig
           - mountPath: /runner/data
-            name: runner-data
-          - mountPath: /etc/ansible/roles
             name: runner-data
           - mountPath: /runner/components/project
             name: components
