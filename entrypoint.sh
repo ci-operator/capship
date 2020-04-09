@@ -5,5 +5,9 @@ if [ `id -u` -gt 1000000 ]; then
     rm /tmp/passwd
 fi
 
+if [ -e /ansible/requirements.yml ]; then
+    ansible-galaxy install -r /ansible/requirements.yml -p /runner/data/cfg/roles/
+fi
+
 echo Running: $@
 exec /bin/tini -- $@
