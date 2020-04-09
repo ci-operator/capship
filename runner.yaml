@@ -143,7 +143,7 @@ objects:
       app: "${RUNNER_NAME}"
     name: "${RUNNER_NAME}"
   spec:
-    host: ${HOST_NAME}-"${RUNNER_NAME}".cloud.paas.psi.redhat.com
+    host: ${HOST_NAME}-${RUNNER_NAME}.cloud.paas.psi.redhat.com
     port:
       targetPort: 9011-tcp
     tls:
