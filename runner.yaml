@@ -2,7 +2,7 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 labels:
-  app: runner
+  app: "${RUNNER_NAME}"
   template: redrunner
 message: RedRunner is deployed
 metadata:
@@ -100,7 +100,7 @@ objects:
             name: "${RUNNER_COMPONENTS_CM}"
         - name: inventory
           configMap:
-            name: runner-hosts
+            name: "${RUNNER_HOSTS_CM}"
         - name: runner-artifacts
           emptyDir: {}
         - name: ansible-tmp
@@ -214,4 +214,9 @@ parameters:
   displayName: Mounted configmap containing Ansible Galaxy requirements.yml
   name: GALAXY_REQUIREMENTS_CM
   value: "runner-roles"
+  required: true
+- description: Runner inventory ConfigMap Name
+  displayName: Mounted configmap containing Ansible hosts
+  name: RUNNER_HOSTS_CM
+  value: "runner-hosts"
   required: true
