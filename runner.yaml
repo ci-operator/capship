@@ -79,6 +79,8 @@ objects:
             name: kubeconfig
           - mountPath: /runner/data
             name: runner-data
+          - mountPath: /etc/ansible/roles
+            name: runner-data
           - mountPath: /runner/components/project
             name: components
           - mountPath: /runner/components/inventory/hosts
