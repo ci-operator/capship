@@ -71,10 +71,10 @@ objects:
           - mountPath: /ansible/requirements.yml
             subPath: requirements.yml
             name: galaxy-requirements
-          # - mountPath: /runner/.ansible
-          #   name: ansible-tmp
-          - mountPath: /.ansible
+          - mountPath: /runner/.ansible
             name: runner-tmp
+          - mountPath: /.ansible
+            name: ansible-tmp
           - mountPath: /runner/.kube
             name: runner-kubeconfig
           - mountPath: /.kube
