@@ -41,7 +41,9 @@ objects:
         containers:
         - name: runner
           args:
-          - /runner/runner
+          - /bin/sh
+          - -c
+          - ${RUNNER_EXEC}
           image: ${RUNNER_IMAGE}:${RUNNER_TAG}
           imagePullPolicy: Always
           env:
@@ -69,10 +71,10 @@ objects:
           - mountPath: /ansible/requirements.yml
             subPath: requirements.yml
             name: galaxy-requirements
-          - mountPath: /runner/.ansible
-            name: ansible-tmp
+          # - mountPath: /runner/.ansible
+          #   name: ansible-tmp
           - mountPath: /.ansible
-            name: runner-data
+            name: runner-tmp
           - mountPath: /runner/.kube
             name: runner-kubeconfig
           - mountPath: /.kube
@@ -104,6 +106,9 @@ objects:
         - name: runner-artifacts
           emptyDir: {}
         - name: ansible-tmp
+          emptyDir:
+            medium: Memory
+        - name: runner-tmp
           emptyDir:
             medium: Memory
         - name: kubeconfig
@@ -225,4 +230,8 @@ parameters:
   name: RUNNER_DB
   value: "/runner/data/runner.db"
   required: true
-
+- description: Runner executable
+  displayName: Command to execute in subreaped shell upon initialization
+  name: RUNNER_EXEC
+  value: /runner/runner
+  required: true
