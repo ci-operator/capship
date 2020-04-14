@@ -99,7 +99,7 @@ objects:
             claimName: "${RUNNER_PVC}"
         - name: components
           configMap:
-            name: "${RUNNER_COMPONENTS_CM}"
+            name: "${RUNNER_PLAYBOOKS_CM}"
         - name: inventory
           configMap:
             name: "${RUNNER_HOSTS_CM}"
@@ -212,7 +212,7 @@ parameters:
   required: true
 - description: Runner Components ConfigMap Name
   displayName: Mounted configmap containing ansible playbooks
-  name: RUNNER_COMPONENTS_CM
+  name: RUNNER_PLAYBOOKS_CM
   value: "recovery-components"
   required: true
 - description: Runner requirements ConfigMap Name
