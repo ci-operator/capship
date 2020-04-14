@@ -116,7 +116,7 @@ objects:
             medium: Memory
         - name: galaxy-requirements
           configMap:
-            name: "${REQUIREMENTS_CM}"
+            name: "${RUNNER_REQS_CM}"
             items:
             - key: requirements.yml
               path: requirements.yml
@@ -217,7 +217,7 @@ parameters:
   required: true
 - description: Runner requirements ConfigMap Name
   displayName: Mounted configmap containing Ansible Galaxy requirements.yml
-  name: REQUIREMENTS_CM
+  name: RUNNER_REQS_CM
   value: "runner-roles"
   required: true
 - description: Runner inventory ConfigMap Name
