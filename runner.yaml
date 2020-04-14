@@ -77,6 +77,8 @@ objects:
             name: ansible-tmp
           - mountPath: /runner/.kube
             name: runner-kubeconfig
+          - mountPath: /runner/.gitconfig
+            subPath: gitconfig
           - mountPath: /.kube
             name: kubeconfig
           - mountPath: /runner/data
@@ -123,6 +125,12 @@ objects:
         - name: runner-kubeconfig
           emptyDir:
             medium: Memory
+        - name: gitconfig
+          configMap:
+            name: "${RUNNER_GITCONFIG}"
+            items:
+            - key: gitconfig
+              path: .gitconfig
 
 - apiVersion: v1
   kind: Service
@@ -234,4 +242,9 @@ parameters:
   displayName: Command to execute in subreaped shell upon initialization
   name: RUNNER_EXEC
   value: /runner/runner
+  required: true
+- description: Runner Git Config
+  displayName: Runner Git Configuration as .gitconfig
+  name: RUNNER_GITCONFIG
+  value: gitconfig
   required: true
