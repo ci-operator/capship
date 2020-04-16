@@ -244,7 +244,7 @@ parameters:
   value: /runner/runner
   required: true
 - description: Runner Git Config
-  displayName: Runner Git Configuration as .gitconfig
+  displayName: Runner Git Configuration configmap as .gitconfig
   name: RUNNER_GITCONFIG
   value: gitconfig
   required: true
