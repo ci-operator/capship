@@ -6,7 +6,7 @@ if [ `id -u` -gt 1000000 ]; then
 fi
 
 if [ -e /ansible/requirements.yml ]; then
-    ansible-galaxy install -r /ansible/requirements.yml -p /runner/data/cfg/roles/
+    ansible-galaxy install -r /ansible/requirements.yml -p /runner/.ansible/roles
 fi
 
 echo Running: $@
