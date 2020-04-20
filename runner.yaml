@@ -78,7 +78,14 @@ objects:
           - mountPath: /runner/.kube
             name: runner-kubeconfig
           - mountPath: /runner/.gitconfig
-            subPath: gitconfig
+            subPath: .gitconfig
+            name: gitconfig
+          - mountPath: /runner/.ssh/known_hosts
+            subPath: known_hosts
+            name: known-hosts
+          - mountPath: /runner/.ssh/id_rsa
+            subPath: id_rsa
+            name: deploy-key
           - mountPath: /.kube
             name: kubeconfig
           - mountPath: /runner/data
@@ -131,6 +138,18 @@ objects:
             items:
             - key: gitconfig
               path: .gitconfig
+        - name: known-hosts
+          configMap:
+            name: "${KNOWN_HOSTS}"
+            items:
+            - key: known_hosts
+              path: known_hosts
+        - name: deploy-key
+          configMap:
+            name: "${DEPLOY_KEY}"
+            items:
+            - key: id_rsa
+              path: id_rsa
 
 - apiVersion: v1
   kind: Service
@@ -247,4 +266,14 @@ parameters:
   displayName: Runner Git Configuration configmap as .gitconfig
   name: RUNNER_GITCONFIG
   value: gitconfig
+  required: true
+- description: Runner Known Hosts
+  displayName: Trusted hosts (.ssh/known-hosts) for git-ls operations
+  name: KNOWN_HOSTS
+  value: known-hosts
+  required: true
+- description: Runner SSH Identity secret
+  displayName: Secret containing id_rsa secret for SSH identity
+  name: DEPLOY_KEY
+  value: deploy-key
   required: true
