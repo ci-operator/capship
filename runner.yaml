@@ -145,8 +145,8 @@ objects:
             - key: known_hosts
               path: known_hosts
         - name: deploy-key
-          configMap:
-            name: "${DEPLOY_KEY}"
+          secret:
+            secretName: "${DEPLOY_KEY}"
             items:
             - key: id_rsa
               path: id_rsa
