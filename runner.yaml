@@ -86,6 +86,9 @@ objects:
           - mountPath: /runner/.ssh/id_rsa
             subPath: id_rsa
             name: deploy-key
+          - mountPath: /runner/token
+            subPath: token
+            name: k8s-token
           - mountPath: /.kube
             name: kubeconfig
           - mountPath: /runner/data
@@ -150,6 +153,12 @@ objects:
             items:
             - key: id_rsa
               path: id_rsa
+        - name: k8s-token
+          secret:
+            secretName: "${TOKEN_NAME}"
+            items:
+            - key: "${TOKEN_NAME}"
+              path: token
 
 - apiVersion: v1
   kind: Service
@@ -276,4 +285,8 @@ parameters:
   displayName: Secret containing id_rsa secret for SSH identity
   name: DEPLOY_KEY
   value: deploy-key
+  required: true
+- description: Runner foreign k8s token secret name (for migration from another cluster)
+  displayName: Secret key/name containing k8s login token
+  name: TOKEN_NAME
   required: true
