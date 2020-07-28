@@ -77,6 +77,8 @@ objects:
             name: ansible-tmp
           - mountPath: /runner/.kube
             name: runner-kubeconfig
+          - mountPath: /runner/.config
+            name: runner-helmconfig
           - mountPath: /runner/.gitconfig
             subPath: .gitconfig
             name: gitconfig
@@ -133,6 +135,9 @@ objects:
             - key: requirements.yml
               path: requirements.yml
         - name: runner-kubeconfig
+          emptyDir:
+            medium: Memory
+        - name: runner-helmconfig
           emptyDir:
             medium: Memory
         - name: gitconfig
