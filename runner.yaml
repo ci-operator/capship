@@ -79,6 +79,8 @@ objects:
             name: runner-kubeconfig
           - mountPath: /runner/.config
             name: runner-helmconfig
+          - mountPath: /runner/.cache
+            name: runner-helmcache
           - mountPath: /runner/.gitconfig
             subPath: .gitconfig
             name: gitconfig
@@ -138,6 +140,9 @@ objects:
           emptyDir:
             medium: Memory
         - name: runner-helmconfig
+          emptyDir:
+            medium: Memory
+        - name: runner-helmcache
           emptyDir:
             medium: Memory
         - name: gitconfig
