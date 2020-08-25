@@ -48,7 +48,7 @@ objects:
           imagePullPolicy: Always
           env:
           - name: RP_HOST
-            value: ${HOST_NAME}.cloud.paas.psi.redhat.com
+            value: ${HOST_NAME}.${SUBDOMAIN}
           - name: RUNNER_VERBOSITY
             value: INFO
           - name: RUNNER_DB
@@ -231,6 +231,10 @@ parameters:
 - description: Project Hostname Base
   displayName: Runner Project Host Name Base
   name: HOST_NAME
+  required: true
+- description: Project Subdomain
+  displayName: Subdomain
+  name: SUBDOMAIN
   required: true
 - description: Runner Name
   displayName: Unique name among Runner instances in one project
