@@ -66,7 +66,7 @@ objects:
           resources:
             limits:
               cpu: 1000m
-              memory: 1Gi
+              memory: ${RUNNER_RAM}
           volumeMounts:
           - mountPath: /ansible/requirements.yml
             subPath: requirements.yml
@@ -279,6 +279,11 @@ parameters:
   displayName: Writable file path for Runner Database
   name: RUNNER_DB
   value: "/runner/data/runner.db"
+  required: true
+- description: Runner RAM limit
+  displayName: Resource limit for memory
+  name: RUNNER_RAM
+  value: "1Gi"
   required: true
 - description: Runner executable
   displayName: Command to execute in subreaped shell upon initialization
