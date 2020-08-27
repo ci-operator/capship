@@ -81,6 +81,9 @@ objects:
             name: runner-helmconfig
           - mountPath: /runner/.cache
             name: runner-helmcache
+          - mountPath: /runner/components/project/extravars
+            subPath: extravars
+            name: extravars
           - mountPath: /runner/.gitconfig
             subPath: .gitconfig
             name: gitconfig
@@ -145,6 +148,12 @@ objects:
         - name: runner-helmcache
           emptyDir:
             medium: Memory
+        - name: extravars
+          configMap:
+            name: "${RUNNER_EXTRAVARS}"
+            items:
+            - key: extravars
+              path: extravars
         - name: gitconfig
           configMap:
             name: "${RUNNER_GITCONFIG}"
@@ -294,6 +303,11 @@ parameters:
   displayName: Runner Git Configuration configmap as .gitconfig
   name: RUNNER_GITCONFIG
   value: gitconfig
+  required: true
+- description: Runner extravars configmap
+  displayName: Ansible-runner extravars yaml configmap name
+  name: RUNNER_EXTRAVARS
+  value: extravars
   required: true
 - description: Runner Known Hosts
   displayName: Trusted hosts (.ssh/known-hosts) for git-ls operations
