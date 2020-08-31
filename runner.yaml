@@ -81,7 +81,7 @@ objects:
             name: runner-helmconfig
           - mountPath: /runner/.cache
             name: runner-helmcache
-          - mountPath: /runner/components/project/extravars
+          - mountPath: /runner/components/env/extravars
             subPath: extravars
             name: extravars
           - mountPath: /runner/.gitconfig
