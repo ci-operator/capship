@@ -124,7 +124,7 @@ objects:
         - name: inventory
           configMap:
             name: "${RUNNER_HOSTS_CM}"
-        - name: kustom
+        - name: kustomization
           configMap:
             name: "${RUNNER_KUSTOMIZE_CM}"
         - name: runner-artifacts
