@@ -309,6 +309,10 @@ parameters:
   name: RUNNER_GITCONFIG
   value: gitconfig
   required: true
+- description: Runner Kustomize Config
+  displayName: Runner kustomize configuration configmap directory
+  name: RUNNER_KUSTOMIZE_CM
+  required: true
 - description: Runner extravars configmap
   displayName: Ansible-runner extravars yaml configmap name
   name: RUNNER_EXTRAVARS
