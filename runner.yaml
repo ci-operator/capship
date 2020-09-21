@@ -19,7 +19,7 @@ metadata:
   name: redrunner
 
 objects:
-- apiVersion: apps/v1beta1
+- apiVersion: apps/v1
   kind: StatefulSet
   metadata:
     name: "${RUNNER_NAME}"
