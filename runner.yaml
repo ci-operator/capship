@@ -64,6 +64,9 @@ objects:
           - containerPort: 9011
             protocol: TCP
           resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
             limits:
               cpu: 1000m
               memory: ${RUNNER_RAM}
@@ -71,7 +74,7 @@ objects:
           - mountPath: /ansible/requirements.yml
             subPath: requirements.yml
             name: galaxy-requirements
-          - mountPath: /ansible/kustom
+          - mountPath: /ansible/kustom-${RUNNER_KUSTOMIZE_CM}
             name: kustomization
           - mountPath: /runner/.ansible
             name: runner-tmp
