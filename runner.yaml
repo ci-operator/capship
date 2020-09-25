@@ -74,8 +74,8 @@ objects:
           - mountPath: /ansible/requirements.yml
             subPath: requirements.yml
             name: galaxy-requirements
-          - mountPath: /ansible/kustom-${RUNNER_KUSTOMIZE_CM}
-            name: kustomization
+          # - mountPath: /ansible/kustom-${RUNNER_KUSTOMIZE_CM}
+          #   name: kustomization
           - mountPath: /runner/.ansible
             name: runner-tmp
           - mountPath: /.ansible
@@ -127,9 +127,9 @@ objects:
         - name: inventory
           configMap:
             name: "${RUNNER_HOSTS_CM}"
-        - name: kustomization
-          configMap:
-            name: "${RUNNER_KUSTOMIZE_CM}"
+        # - name: kustomization
+        #   configMap:
+        #     name: "${RUNNER_KUSTOMIZE_CM}"
         - name: runner-artifacts
           emptyDir: {}
         - name: ansible-tmp
@@ -312,10 +312,10 @@ parameters:
   name: RUNNER_GITCONFIG
   value: gitconfig
   required: true
-- description: Runner Kustomize Config
-  displayName: Runner kustomize configuration configmap directory
-  name: RUNNER_KUSTOMIZE_CM
-  required: true
+# - description: Runner Kustomize Config
+#   displayName: Runner kustomize configuration configmap directory
+#   name: RUNNER_KUSTOMIZE_CM
+#   required: true
 - description: Runner extravars configmap
   displayName: Ansible-runner extravars yaml configmap name
   name: RUNNER_EXTRAVARS
