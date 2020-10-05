@@ -20,7 +20,7 @@ metadata:
 
 objects:
 - apiVersion: apps/v1
-  kind: statefulset
+  kind: StatefulSet
   metadata:
     name: "${RUNNER_NAME}"
     namespace: "${NAMESPACE}"
