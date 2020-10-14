@@ -48,7 +48,7 @@ objects:
           imagePullPolicy: Always
           env:
           - name: RP_HOST
-            value: ${HOST_NAME}.${SUBDOMAIN}
+            value: ${HOST_NAME}.${DOMAIN}
           - name: RUNNER_VERBOSITY
             value: INFO
           - name: RUNNER_DB
@@ -211,7 +211,7 @@ objects:
       app: "${RUNNER_NAME}"
     name: "${RUNNER_NAME}"
   spec:
-    host: ${HOST_NAME}-${RUNNER_NAME}.cloud.paas.psi.redhat.com
+    host: ${HOST_NAME}-${RUNNER_NAME}.${DOMAIN}
     port:
       targetPort: 9011-tcp
     tls:
@@ -251,7 +251,7 @@ parameters:
   required: true
 - description: Project Subdomain
   displayName: Subdomain
-  name: SUBDOMAIN
+  name: DOMAIN
   required: true
 - description: Runner Name
   displayName: Unique name among Runner instances in one project
