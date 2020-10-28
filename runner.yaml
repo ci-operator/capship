@@ -249,8 +249,8 @@ parameters:
   displayName: Runner Project Host Name Base
   name: HOST_NAME
   required: true
-- description: Project Subdomain
-  displayName: Subdomain
+- description: Project hostname domain
+  displayName: Domain
   name: DOMAIN
   required: true
 - description: Runner Name
