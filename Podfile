@@ -1,5 +1,5 @@
-#### RedRunner ####
-FROM docker-registry-default.cloud.registry.upshift.redhat.com/ccit/runner:base
+#### CapShip ####
+FROM localhost/runner:base
 
 LABEL maintainer=josiah@redhat.com
 
