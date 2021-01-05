@@ -1,16 +1,16 @@
-**RedRunner**
+**CapShip**
 
-RedRunner is a microservice utility for executing Ansible playbooks via API as part of a distributed Kubernetes deployment.
+CapShip is a microservice utility for executing Ansible playbooks via a minimalist API as part of a Kubernetes application deployment.
 
 
-A RedRunner Jobs and their Units are created by POSTing to the API a tag and a list of Unit names. Mulitple Jobs can co-exist with the same tag, but each has a unique ID.
-PUTting data to a Unit will specify the data_dir containing a project subdirectory full of playbooks.  Operations are triggered by POSTing a playbook filename as the "action" parameter to a Unit.
+A CapShip Job and its Units are created by POSTing to the API with a job tag and a list of Unit names. Mulitple Jobs can co-exist with the same tag, but each has a unique ID.
+PUTting data to a Unit will specify the data_dir containing a project subdirectory full of playbooks.  Operations are triggered by POSTing a playbook filename as the "action" parameter to a Unit endpoint.
 Each playbook runs in its own thread. 
 
-Generally, each Unit will be named after a microservice component in a cloud application, and the jobs_tag will describe the type of operation performed on all Units within it.
+By convention, each Unit should be named after a microservice component (or resource definition) in a cloud application, and the jobs_tag will describe the type of operation performed on all Units within it.
 
 
-The playbooks and roles provided in `runner/utils` and `runner/components/project` respectively serve as an example one way to use the RedRunner to initialize, trigger, and track the status of playbook operations in tagged RedRunner Job/Unit sets.
+The playbooks and roles provided in `runner/utils` and `runner/components/project` respectively serve as an example one way to use CapShip to initialize, trigger, and track the status of playbook operations in tagged CapShip Job/Unit sets.
 
 To configure and implement this, the ansible playbooks `(restore|backup)-each.yml` are example patterns of pairing two plays, one for configuring units in a job, and another for running and tracking operations in a unit:
 
