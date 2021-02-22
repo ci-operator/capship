@@ -4,20 +4,19 @@ kind: Template
 labels:
   app: "${RUNNER_NAME}"
   template: redrunner
-message: RedRunner is deployed
+message: CapShip is deployed
 metadata:
   annotations:
     description: |-
-      RedRunner - A minimalist API for distributable, in-cluster microservice O&M via ansible playbooks
+      CapShip - A minimalist API for distributable, in-cluster microservice O&M via ansible playbooks
     iconClass: icon-openshift
-    openshift.io/display-name: RedRunner
+    openshift.io/display-name: CapShip
     openshift.io/documentation-url: https://gitlab.engineering.redhat.com/ccit/redrunner/raw/master/README.md
-    openshift.io/long-description: This template deploys RedRunner
+    openshift.io/long-description: This template deploys CapShip
     openshift.io/provider-display-name: Red Hat, Inc.
     openshift.io/support-url: https://access.redhat.com
     tags: redrunner,backup,recovery,admin,ops,ansible,ansible-runner,runner
   name: redrunner
-
 objects:
 - apiVersion: apps/v1
   kind: StatefulSet
