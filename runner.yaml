@@ -85,6 +85,8 @@ objects:
             name: runner-helmconfig
           - mountPath: /runner/.cache
             name: runner-helmcache
+          - mountPath: /runner/.mc
+            name: runner-miniocache
           - mountPath: /runner/components/env/extravars
             subPath: extravars
             name: extravars
@@ -153,6 +155,9 @@ objects:
           emptyDir:
             medium: Memory
         - name: runner-helmcache
+          emptyDir:
+            medium: Memory
+        - name: runner-miniocache
           emptyDir:
             medium: Memory
         - name: extravars
