@@ -73,8 +73,6 @@ objects:
           - mountPath: /ansible/requirements.yml
             subPath: requirements.yml
             name: galaxy-requirements
-          # - mountPath: /ansible/kustom-${RUNNER_KUSTOMIZE_CM}
-          #   name: kustomization
           - mountPath: /runner/.ansible
             name: runner-tmp
           - mountPath: /.ansible
@@ -87,6 +85,8 @@ objects:
             name: runner-helmcache
           - mountPath: /runner/.mc
             name: runner-miniocache
+          - mountPath: /runner/components/roles
+            name: runner-tmp
           - mountPath: /runner/components/env/extravars
             subPath: extravars
             name: extravars
